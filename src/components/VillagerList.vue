@@ -1,261 +1,201 @@
-<template>
-  <div class="mt-8 bg-green-500 p-8 sm:p-2 rounded-lg">
-    <div class="text-center p-16 text-green-700" v-if="loading">
-      <h3 class="text-5xl">Initial Loading...</h3>
-      <p class="text-3xl">
-        If this is the first time you're visiting Villadex, please allow the app
-        to load all the Villager data. This process can take upwards of a minute
-        or so depending on your connection. The data will be stored locally on
-        your device to save you time in the future.
-      </p>
-    </div>
-    <div
-      v-if="!loading"
-      class="
-        p-4
-        sm:p-2
-        bg-green-300
-        rounded-lg
-        text-green-700
-        mb-2
-        border-2 border-green-600
-        flex
-        justify-between
-        items-center
-        flex-wrap
-        sm:flex-col
-      "
-    >
-      <div class="flex flex-col items-center">
-        <label class="text-sm font-black">FILTER BY NAME</label>
-        <input
-          type="text"
-          class="
-            p-2
-            rounded-full
-            bg-green-200
-            border-2 border-green-400
-            w-64
-            text-center
-          "
-          v-model="nameFilter"
-        />
-      </div>
+<template lang="pug">
+div(class="mt-8 bg-green-500 p-8 sm:p-2 rounded-lg")
+  div(class="text-center p-16 text-green-700" v-if="loading")
+    h3(class="text-5xl") Initial Loading...
+    p(class="text-3xl"
+    ) If this is the first time you're visiting Villadex, please allow the app to load all the Villager data. This process can take upwards of a minute or so depending on your connection. The data will be stored locally on your device to save you time in the future.
 
-      <div class="toolbar flex sm:flex-col flex-wrap">
-        <!-- SPECIES -->
-        <div class="flex flex-col items-center">
-          <label for="personality" class="text-sm font-black">SPECIES</label>
-          <select
-            name="personality"
-            class="
-              px-4
-              py-2
-              rounded-full
-              bg-green-200
-              border-2 border-green-400
-            "
-            v-model="specie"
-          >
-            <option :value="null" default>All</option>
-            <option v-for="s in species" :key="s" :value="s">
-              {{ s }}
-            </option>
-          </select>
-        </div>
+  div(
+    v-if="!loading"
+    class="p-4 sm:p-2 bg-green-300 rounded-lg text-green-700 mb-2 border-2 border-green-600 flex justify-between items-center flex-wrap sm:flex-col"
+  )
+    div(class="flex flex-col items-center")
+      label(class="text-sm font-black") FILTER BY NAME
+      input(
+        type="text"
+        class="p-2 rounded-full bg-green-200 border-2 border-green-400 w-64 text-center"
+        v-model="nameFilter"
+      )
 
-        <!-- PERSONALITY -->
-        <div class="flex flex-col ml-2 items-center">
-          <label for="personality" class="text-sm font-black"
-            >PERSONALITY</label
-          >
-          <select
-            name="personality"
-            class="
-              px-4
-              py-2
-              rounded-full
-              bg-green-200
-              border-2 border-green-400
-            "
-            v-model="personality"
-          >
-            <option :value="null" default>All</option>
-            <option v-for="p in personalities" :key="p" :value="p">
-              {{ p }}
-            </option>
-          </select>
-        </div>
+    div(class="toolbar flex sm:flex-col flex-wrap")
+      //- <!-- SPECIES -->
+      div(class="flex flex-col items-center")
+        label(for="personality" class="text-sm font-black") SPECIES
+        select(
+          name="personality"
+          class="px-4 py-2 rounded-full bg-green-200 border-2 border-green-400"
+          v-model="specie"
+        )
+          option(:value="null" default) All
+          option(v-for="s in species" :key="s" :value="s") {{ s }}
 
-        <!-- HOBBY -->
-        <div class="flex flex-col ml-2 items-center">
-          <label for="personality" class="text-sm font-black">HOBBY</label>
-          <select
-            name="personality"
-            class="
-              px-4
-              py-2
-              rounded-full
-              bg-green-200
-              border-2 border-green-400
-            "
-            v-model="hobby"
-          >
-            <option :value="null" default>All</option>
-            <option v-for="h in hobbies" :key="h" :value="h">{{ h }}</option>
-          </select>
-        </div>
+      //- <!-- PERSONALITY -->
+      div(class="flex flex-col ml-2 items-center")
+        label(for="personality" class="text-sm font-black") PERSONALITY
+        select(
+          name="personality"
+          class="px-4 py-2 rounded-full bg-green-200 border-2 border-green-400"
+          v-model="personality"
+        )
+          option(:value="null" default) All
+          option(v-for="p in personalities" :key="p" :value="p") {{ p }}
 
-        <!-- CLEAR FILTERS -->
-        <button
-          class="text-green-700 px-6 font-bold"
-          @click="clearFilters"
-          v-if="hasFilters"
-        >
-          Clear Filters
-        </button>
-      </div>
-    </div>
+      //- <!-- HOBBY -->
+      div(class="flex flex-col ml-2 items-center")
+        label(for="personality" class="text-sm font-black") HOBBY
+        select(
+          name="personality"
+          class="px-4 py-2 rounded-full bg-green-200 border-2 border-green-400"
+          v-model="hobby"
+        )
+          option(:value="null" default) All
+          option(v-for="h in hobbies" :key="h" :value="h") {{ h }}
 
-    <div v-if="!loading && filteredVillagers.length > 0">
-      <transition-group
-        tag="div"
-        class="flex flex-wrap items-center justify-center"
-        mode="out-in"
-        name="cards"
-      >
-        <VillagerCard
-          v-for="(v, index) in filteredVillagers"
-          :key="'villager' + index + '_' + v.id"
-          :v="v"
-          @select-villager="$emit('select-villager', v)"
-        />
-      </transition-group>
-    </div>
+      //- <!-- CLEAR FILTERS -->
+      button(
+        class="text-green-700 px-6 font-bold"
+        @click="clearFilters"
+        v-if="hasFilters"
+      ) Clear Filters
 
-    <div class="text-center p-16 text-5xl text-green-700" v-else-if="!loading">
-      NO VILLAGERS MATCH!
-    </div>
-  </div>
+  //- CARDS
+  div(v-if="!loading && filteredVillagers.length > 0")
+    transition-group(
+      tag="div"
+      class="flex flex-wrap items-center justify-center"
+      mode="out-in"
+      name="cards"
+    )
+      VillagerCard(
+        v-for="(v, index) in filteredVillagers"
+        :key="'villager' + index + '_' + v.id"
+        :villager="v"
+        @select-villager="$emit('select-villager', v)"
+      )
+  div(class="text-center p-16 text-5xl text-green-700" v-else-if="!loading") NO VILLAGERS MATCH!
 </template>
 
 <script>
 import axios from "axios";
-import { Options, Vue } from "vue-class-component";
+import { defineComponent, ref, computed, onMounted } from "vue";
 import VillagerCard from "./VillagerCard.vue";
 
-@Options({
-  name: "VillagerList",
+export default defineComponent({
   components: { VillagerCard },
 
-  data() {
-    return {
-      villagers: [],
-      loading: true,
-      nameFilter: "",
-      personality: null,
-      hobby: null,
-      specie: null,
-      loadingText: "LOADING...",
-      personalities: [
-        "Cranky",
-        "Jock",
-        "Lazy",
-        "Normal",
-        "Peppy",
-        "Big sister",
-        "Smug",
-        "Snooty",
-      ],
-      hobbies: ["Education", "Fashion", "Fitness", "Music", "Nature", "Play"],
-      species: [
-        "Alligator",
-        "Anteater",
-        "Bear",
-        "Bird",
-        "Bull",
-        "Cat",
-        "Chicken",
-        "Cow",
-        "Cub",
-        "Deer",
-        "Dog",
-        "Duck",
-        "Eagle",
-        "Elephant",
-        "Frog",
-        "Goat",
-        "Gorilla",
-        "Hamster",
-        "Hippo",
-        "Horse",
-        "Kangaroo",
-        "Koala",
-        "Lion",
-        "Monkey",
-        "Mouse",
-        "Octopus",
-        "Ostrich",
-        "Penguin",
-        "Pig",
-        "Rabbit",
-        "Rhino",
-        "Sheep",
-        "Squirrel",
-        "Tiger",
-        "Wolf",
-      ],
-    };
-  },
+  setup() {
+    let villagers = ref([]);
+    let loading = ref(true);
+    let nameFilter = ref("");
+    let personality = ref(null);
+    let hobby = ref(null);
+    let specie = ref(null);
+    let loadingText = ref("LOADING...");
+    const personalities = [
+      "Cranky",
+      "Jock",
+      "Lazy",
+      "Normal",
+      "Peppy",
+      "Big sister",
+      "Smug",
+      "Snooty",
+    ];
+    const hobbies = [
+      "Education",
+      "Fashion",
+      "Fitness",
+      "Music",
+      "Nature",
+      "Play",
+    ];
+    const species = [
+      "Alligator",
+      "Anteater",
+      "Bear",
+      "Bird",
+      "Bull",
+      "Cat",
+      "Chicken",
+      "Cow",
+      "Cub",
+      "Deer",
+      "Dog",
+      "Duck",
+      "Eagle",
+      "Elephant",
+      "Frog",
+      "Goat",
+      "Gorilla",
+      "Hamster",
+      "Hippo",
+      "Horse",
+      "Kangaroo",
+      "Koala",
+      "Lion",
+      "Monkey",
+      "Mouse",
+      "Octopus",
+      "Ostrich",
+      "Penguin",
+      "Pig",
+      "Rabbit",
+      "Rhino",
+      "Sheep",
+      "Squirrel",
+      "Tiger",
+      "Wolf",
+    ];
 
-  computed: {
-    filteredByName() {
-      return this.villagers.filter((v) => {
-        return v.name.toLowerCase().includes(this.nameFilter.toLowerCase());
+    const filteredByName = computed(() => {
+      return villagers.value.filter((v) => {
+        return v.name.toLowerCase().includes(nameFilter.value.toLowerCase());
       });
-    },
-    filteredVillagers() {
-      if (this.hobby || this.personality || this.specie) {
-        let params = this.filteredByName;
+    });
 
-        if (this.specie) {
+    const filteredVillagers = computed(() => {
+      if (hobby.value || personality.value || specie.value) {
+        let params = filteredByName.value;
+
+        if (specie.value) {
           params = params.filter((v) => {
-            return v.species === this.specie;
+            return v.species === specie.value;
           });
         }
 
-        if (this.personality) {
+        if (personality.value) {
           params = params.filter((v) => {
-            return v.personality === this.personality;
+            return v.personality === personality.value;
           });
         }
 
-        if (this.hobby) {
+        if (hobby.value) {
           params = params.filter((v) => {
-            return v.nh_details.hobby === this.hobby;
+            return v.nh_details.hobby === hobby.value;
           });
         }
 
         return params;
       }
 
-      return this.filteredByName;
-    },
-    hasFilters() {
-      return (
-        this.nameFilter !== "" ||
-        this.specie !== null ||
-        this.personality !== null ||
-        this.hobby !== null
-      );
-    },
-  },
+      return filteredByName.value;
+    });
 
-  methods: {
-    getVillagers() {
+    const hasFilters = computed(() => {
+      return (
+        nameFilter.value !== "" ||
+        specie.value !== null ||
+        personality.value !== null ||
+        hobby.value !== null
+      );
+    });
+
+    const getVillagers = () => {
       if (localStorage.getItem("villadex-villagers")) {
-        this.villagers = JSON.parse(localStorage.getItem("villadex-villagers"));
-        this.loading = false;
+        villagers.value = JSON.parse(
+          localStorage.getItem("villadex-villagers")
+        );
+        loading.value = false;
         return;
       }
 
@@ -267,31 +207,49 @@ import VillagerCard from "./VillagerCard.vue";
           },
         })
         .then((results) => {
-          this.villagers = results.data;
+          villagers.value = results.data;
 
           localStorage.setItem(
             "villadex-villagers",
             JSON.stringify(results.data)
           );
-          this.loading = false;
+          loading.value = false;
         })
         .catch(() => {
-          this.loadingText = "LOAD FAILED!";
+          loadingText.value = "LOAD FAILED!";
         });
-    },
-    clearFilters() {
-      this.nameFilter = "";
-      this.specie = null;
-      this.personality = null;
-      this.hobby = null;
-    },
-  },
+    };
 
-  mounted() {
-    this.getVillagers();
+    const clearFilters = () => {
+      nameFilter.value = "";
+      specie.value = null;
+      personality.value = null;
+      hobby.value = null;
+    };
+
+    onMounted(() => {
+      getVillagers();
+    });
+
+    return {
+      villagers,
+      loading,
+      nameFilter,
+      personality,
+      hobby,
+      specie,
+      loadingText,
+      personalities,
+      hobbies,
+      species,
+      filteredByName,
+      filteredVillagers,
+      hasFilters,
+      getVillagers,
+      clearFilters,
+    };
   },
-})
-export default class VillagerList extends Vue {}
+});
 </script>
 
 <style lang="stylus">

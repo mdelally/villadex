@@ -1,91 +1,52 @@
-<template>
-  <div class="villager-card-container sm:p-0 sm:pb-2 p-2">
-    <button
-      class="
-        w-full
-        villager-card
-        bg-green-200
-        rounded-lg
-        sm:p-2
-        p-4
-        flex flex-col
-        sm:flex-row
-        justify-center
-        items-center
-        sm:justify-between
-        hover:bg-green-100
-        border-4 border-transparent
-        hover:border-green-700
-      "
-      @click="$emit('select-villager')"
-    >
-      <div class="flex-col sm:flex-row-reverse">
-        <h3
-          class="px-4 py-2 rounded-full shadow text-xl mb-2"
-          :style="villagerName(v.id)"
-        >
-          {{ v.name }}
-        </h3>
-        <img
-          class="h-32 villager-icon"
-          :src="v.nh_details.icon_url"
-          :alt="v.name"
-        />
-      </div>
+<template lang="pug">
+div(class="villager-card-container sm:p-0 sm:pb-2 p-2")
+  button(
+    class="w-full villager-card bg-green-200 rounded-lg sm:p-2 p-4 flex flex-col sm:flex-row justify-center items-center sm:justify-between hover:bg-green-100 border-4 border-transparent hover:border-green-700"
+    @click="$emit('select-villager')"
+  )
+    div(class="flex-col sm:flex-row-reverse")
+      h3(class="px-4 py-2 rounded-full shadow text-xl mb-2" :style="villagerName(villager.id)") {{ villager.name }}
+      img(
+        class="h-32 villager-icon"
+        :src="villager.nh_details.icon_url"
+        :alt="villager.name"
+        v-if="villager.nh_details.icon_url"
+      )
+      img(class="h-32 w-full p-2 villager-icon" :src="leaf" v-else)
 
-      <div class="flex flex-col">
-        <em class="text-green-900 m-2 px-3 py-1 font-black rounded-full">{{
-          v.personality + " " + v.species
-        }}</em>
-        <div
-          class="
-            bg-blue-200
-            px-3
-            py-1
-            rounded-full
-            mb-1
-            border-2 border-blue-600
-            text-blue-600
-          "
-        >
-          {{ v.nh_details.hobby }}
-        </div>
-        <strong
-          class="
-            bg-green-600
-            text-green-200
-            border-2 border-green-700
-            px-4
-            py-1
-            rounded-full
-          "
-          >{{ v.birthday_month + " " + v.birthday_day }}</strong
-        >
-      </div>
-    </button>
-  </div>
+    div(class="flex flex-col")
+      em(class="text-green-900 m-2 px-3 py-1 font-black rounded-full") {{ `${villager.personality} ${villager.species}` }}
+      div(class="bg-blue-200 px-3 py-1 rounded-full mb-1 border-2 border-blue-600 text-blue-600") {{ villager.nh_details.hobby ? villager.nh_details.hobby : "???" }}
+      strong(class="bg-green-600 text-green-200 border-2 border-green-700 px-4 py-1 rounded-full") {{ `${villager.birthday_month} ${villager.birthday_day}` }}
 </template>
 
 <script>
-import { Options, Vue } from "vue-class-component";
+import { defineComponent } from "vue";
+import leaf from "@/assets/leaf.svg";
 
-@Options({
-  name: "VillagerCard",
-
+export default defineComponent({
   props: {
-    v: { type: Object, default: null },
+    villager: { type: Object, default: null },
   },
 
-  methods: {
-    villagerName() {
+  setup(props) {
+    const villagerName = () => {
+      let color = props.villager.text_color
+        ? `#${props.villager.text_color}`
+        : "#222";
+      let backgroundColor = props.villager.title_color
+        ? `#${props.villager.title_color}`
+        : "#FFF";
+
       return {
-        color: "#" + this.v.text_color,
-        backgroundColor: "#" + this.v.title_color,
+        color,
+        backgroundColor,
       };
-    },
+    };
+
+    return { leaf, villagerName };
   },
-})
-export default class VillagerCard extends Vue {}
+});
 </script>
 
 <style lang="stylus">

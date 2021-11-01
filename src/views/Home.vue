@@ -1,7 +1,5 @@
 <template lang="pug">
-div(
-  class="bg-green-200 rounded-lg p-4 text-center text-green-900"
-)
+div(class="bg-green-200 rounded-lg p-4 text-center text-green-900")
   p.mb-2 Quickly search and learn about <em>Animal Crossing: New Horizons®</em> villagers. This data is brought to you by the 
     a(href="https://api.nookipedia.com/") Nookipedia API
 

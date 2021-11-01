@@ -15,20 +15,19 @@ div
 
       //- // TOP SECTION - GENERAL basic AND IMAGE
       div(class="flex sm:flex-col sm:items-center")
-        div
-          img(:src="villager.image_url" class="w-24 mr-4")
+        div: img(:src="villager.image_url" class="w-24 mr-4")
 
         div(class="ml-4 w-full sm:ml-0 sm:p-2")
-          h2(class="text-4xl text-green-900 sm:text-center") {{ villager.name }}
+          h2(class="text-4xl text-green-900 text-left sm:text-center") {{ villager.name }} {{ villager.gender === 'Male' ? '♂' : '♀️' }}
 
           div(class="flex items-center border-b-2 border-green-500 w-full pb-2 sm:flex-col")
             em(class="text-xl text-green-800 font-black mr-4") {{ villager.personality + " " + villager.species }}
-            div(class="bg-blue-200 px-3 rounded-full border-2 border-blue-600 text-blue-600 mr-2 sm:mr-0 sm:mb-2") {{ villager.nh_details.hobby }}
+            div(class="bg-blue-200 px-3 rounded-full border-2 border-blue-600 text-blue-600 mr-2 sm:mr-0 sm:mb-2" v-if="villager.nh_details.hobby") {{ villager.nh_details.hobby }}
 
             strong(class="bg-green-600 text-green-200 border-2 border-green-700 px-4 rounded-full") {{ villager.birthday_month + " " + villager.birthday_day }}
 
-          div(class="p-2 border-l-4 border-green-900 mt-2 italic text-green-800 text-xl bg-orange-200")
-            span "{{ villager.quote }}"
+          div(class="p-2 border-l-4 border-green-900 mt-2 italic text-green-800 text-xl bg-orange-200 text-left")
+            span "{{ villager.quote ? villager.quote : '???' }}"
             
       //- <!-- BOTTOM SECTION - DETAILS -->
       h3(class="text-2xl text-green-800 mt-4") Details
@@ -57,88 +56,78 @@ div
             a(:href="villager.nh_details.house_interior_url" target="_blank")
               img(:src="villager.nh_details.house_interior_url")
 
-          div(class="flex flex-col items-center text-xl text-green-800 mb-2 p-2 w-64")            )
+          div(class="flex flex-col items-center text-xl text-green-800 mb-2 p-2 w-64")
             h4 Villager Photo
             a(:href="villager.nh_details.photo_url" target="_blank")
               img(:src="villager.nh_details.photo_url")
 </template>
 
 <script>
-import { Options, Vue } from "vue-class-component";
+import { defineComponent, watch, computed } from "vue";
 
-@Options({
-  name: "VillagerInfoPage",
-
+export default defineComponent({
   props: {
     villager: { type: Object, default: null },
   },
+  setup(props) {
+    const availableDetailList = [
+      "id",
+      "gender",
+      "personality",
+      "species",
+      "sign",
+      "clothing",
+    ];
+    const availableNHDetailList = [
+      "catchphrase",
+      "hobby",
+      "house_music",
+      "house_wallpaper",
+      "fav_colors",
+      "fav_styles",
+    ];
 
-  data() {
-    return {
-      availableDetailList: [
-        "id",
-        "gender",
-        "personality",
-        "species",
-        "sign",
-        "clothing",
-      ],
-      availableNHDetailList: [
-        "catchphrase",
-        "hobby",
-        "house_music",
-        "house_wallpaper",
-        "fav_colors",
-        "fav_styles",
-      ],
-    };
-  },
-
-  watch: {
-    villager(v) {
-      if (v !== null) {
+    watch(props.villager, (value) => {
+      if (value !== null)
         document.querySelector("html").classList.add("menuOpen");
-      } else {
-        document.querySelector("html").classList.remove("menuOpen");
-      }
-    },
-  },
+      else document.querySelector("html").classList.remove("menuOpen");
+    });
 
-  computed: {
-    availableDetails() {
-      if (this.villager === null) return [];
+    const availableDetails = computed(() => {
+      if (props.villager === null) return [];
 
       let details = [];
 
-      let basic = Object.entries(this.villager).filter((e) => {
-        return this.availableDetailList.includes(e[0]);
+      let basic = Object.entries(props.villager).filter((e) => {
+        return availableDetailList.includes(e[0]);
       });
 
-      let nh = Object.entries(this.villager.nh_details).filter((e) => {
-        return this.availableNHDetailList.includes(e[0]);
+      let nh = Object.entries(props.villager.nh_details).filter((e) => {
+        return availableNHDetailList.includes(e[0]);
       });
 
       basic.forEach((i) => details.push(i));
       nh.forEach((n) => details.push(n));
 
       return details;
-    },
-  },
+    });
 
-  methods: {
-    detailLabel(label) {
+    const detailLabel = (label) => {
       return label.replace("_", " ").replace("house", "");
-    },
-    parseDetail(detail) {
-      if (Array.isArray(detail)) {
-        return detail.join(", ");
-      }
+    };
+
+    const parseDetail = (detail) => {
+      if (detail === "" || (Array.isArray(detail) && detail.length === 0))
+        return "???";
+
+      if (Array.isArray(detail)) return detail.join(", ");
 
       return detail;
-    },
+    };
+
+    return { props, availableDetails, detailLabel, parseDetail };
   },
-})
-export default class VillagerInfoPage extends Vue {}
+});
 </script>
 
 <style lang="stylus">
