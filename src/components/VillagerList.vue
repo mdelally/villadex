@@ -76,21 +76,20 @@ div(class="mt-8 bg-green-500 p-8 sm:p-2 rounded-lg")
 </template>
 
 <script>
-import axios from "axios";
 import { defineComponent, ref, computed, onMounted } from "vue";
+import useApi from "../composables/useApi.ts";
 import VillagerCard from "./VillagerCard.vue";
 
 export default defineComponent({
   components: { VillagerCard },
 
   setup() {
-    let villagers = ref([]);
-    let loading = ref(true);
+    const { loading, loadingText, getVillagers, items: villagers } = useApi();
     let nameFilter = ref("");
     let personality = ref(null);
     let hobby = ref(null);
     let specie = ref(null);
-    let loadingText = ref("LOADING...");
+
     const personalities = [
       "Cranky",
       "Jock",
@@ -190,36 +189,6 @@ export default defineComponent({
       );
     });
 
-    const getVillagers = () => {
-      if (localStorage.getItem("villadex-villagers")) {
-        villagers.value = JSON.parse(
-          localStorage.getItem("villadex-villagers")
-        );
-        loading.value = false;
-        return;
-      }
-
-      axios
-        .get("https://api.nookipedia.com/villagers?game=nh&nhdetails=true", {
-          headers: {
-            "X-API-KEY": "d84c97c8-144d-41a3-8639-2275e7cfecf8",
-            "Accept-Version": "2.0.0",
-          },
-        })
-        .then((results) => {
-          villagers.value = results.data;
-
-          localStorage.setItem(
-            "villadex-villagers",
-            JSON.stringify(results.data)
-          );
-          loading.value = false;
-        })
-        .catch(() => {
-          loadingText.value = "LOAD FAILED!";
-        });
-    };
-
     const clearFilters = () => {
       nameFilter.value = "";
       specie.value = null;
@@ -245,7 +214,6 @@ export default defineComponent({
       filteredByName,
       filteredVillagers,
       hasFilters,
-      getVillagers,
       clearFilters,
     };
   },

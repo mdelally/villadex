@@ -18,7 +18,7 @@ div
         div: img(:src="villager.image_url" class="w-24 mr-4")
 
         div(class="ml-4 w-full sm:ml-0 sm:p-2")
-          h2(class="text-4xl text-green-900 text-left sm:text-center") {{ villager.name }} {{ villager.gender === 'Male' ? '♂' : '♀️' }}
+          h2(class="text-4xl text-green-900 text-left sm:text-center") {{ villagerName }}
 
           div(class="flex items-center border-b-2 border-green-500 w-full pb-2 sm:flex-col")
             em(class="text-xl text-green-800 font-black mr-4") {{ villager.personality + " " + villager.species }}
@@ -93,6 +93,12 @@ export default defineComponent({
       else document.querySelector("html").classList.remove("menuOpen");
     });
 
+    const villagerName = computed(() => {
+      let gender = props.villager.gender === "Male" ? "♂" : "♀";
+
+      return `${props.villager.name} ${gender}`;
+    });
+
     const availableDetails = computed(() => {
       if (props.villager === null) return [];
 
@@ -125,7 +131,7 @@ export default defineComponent({
       return detail;
     };
 
-    return { props, availableDetails, detailLabel, parseDetail };
+    return { props, villagerName, availableDetails, detailLabel, parseDetail };
   },
 });
 </script>
