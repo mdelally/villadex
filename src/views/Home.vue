@@ -1,19 +1,18 @@
 <template lang="pug">
-div(class="bg-green-200 rounded-lg p-4 text-center text-green-900")
-  p.mb-2 Quickly search and learn about <em>Animal Crossing: New Horizons®</em> villagers. This data is brought to you by the 
-    a(href="https://api.nookipedia.com/") Nookipedia API
+div(class="bg-green-200 rounded-lg p-4 text-center text-green-900 mb-16")
+  div(class="grid grid-cols-2 gap-4 sm:grid-cols-none")
+    div.p-2
+      Intro
 
-  p.font-bold.text-xl.mb-4 App built with love by Michael DeLally using Vue 3 with TypeScript and TailwindCSS
-
-  p.text-xs All characters, content, and imagery is copyright Nintendo
-
-  button(
+    div.self-center
+      button(
         class="hover:bg-green-800 hover:text-green-200 font-bold px-8 py-2 mt-4 rounded-full hover:border-transparent border-2 border-green-800 text-green-800 bg-transparent"
         @click="clearData"
-  )
-    span Clear and Update Villager Data
+      )
+        span Clear and Update Villager Data
 
-  VillagerList(@select-villager="setVillager")
+  VillagerList(@select-villager="setVillager" :villagers="villagers" v-if="!loading")
+  div(class="p-16 flex justify-center" v-else): img(src="../assets/gyroid.gif")
 
   transition(mode="out-in" name="info")
     VillagerInfoPage(
@@ -21,32 +20,44 @@ div(class="bg-green-200 rounded-lg p-4 text-center text-green-900")
       :villager="currentVillager"
       @close-info="closeInfo"
     )
+
+  Footer
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted } from "vue";
+import useData from "@/composables/useData";
+import Intro from "@/components/layout/Intro.vue";
 import VillagerList from "@/components/VillagerList.vue";
 import VillagerInfoPage from "@/components/VillagerInfoPage.vue";
+import Footer from "@/components/layout/Footer.vue";
 
 export default defineComponent({
-  components: { VillagerList, VillagerInfoPage },
+  components: { Intro, VillagerList, VillagerInfoPage, Footer },
   setup() {
-    let currentVillager = ref(null);
+    const { getVillagers, clearData, villagers, currentVillager, loading } =
+      useData();
 
     const setVillager = (v: any) => {
       currentVillager.value = v;
     };
+
     const closeInfo = () => {
       currentVillager.value = null;
     };
 
-    const clearData = () => {
-      if (confirm("Are you sure you want to clear and update?"))
-        localStorage.removeItem("villadex-villagers");
-      window.location.reload();
-    };
+    onMounted(() => {
+      getVillagers();
+    });
 
-    return { currentVillager, setVillager, closeInfo, clearData };
+    return {
+      currentVillager,
+      villagers,
+      loading,
+      setVillager,
+      closeInfo,
+      clearData,
+    };
   },
 });
 </script>

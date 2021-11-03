@@ -102,8 +102,6 @@ export default defineComponent({
     const availableDetails = computed(() => {
       if (props.villager === null) return [];
 
-      let details = [];
-
       let basic = Object.entries(props.villager).filter((e) => {
         return availableDetailList.includes(e[0]);
       });
@@ -112,10 +110,7 @@ export default defineComponent({
         return availableNHDetailList.includes(e[0]);
       });
 
-      basic.forEach((i) => details.push(i));
-      nh.forEach((n) => details.push(n));
-
-      return details;
+      return basic.concat(nh);
     });
 
     const detailLabel = (label) => {

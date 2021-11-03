@@ -1,14 +1,6 @@
 <template lang="pug">
 div(class="mt-8 bg-green-500 p-8 sm:p-2 rounded-lg")
-  div(class="text-center p-16 text-green-700" v-if="loading")
-    h3(class="text-5xl") Initial Loading...
-    p(class="text-3xl"
-    ) If this is the first time you're visiting Villadex, please allow the app to load all the Villager data. This process can take upwards of a minute or so depending on your connection. The data will be stored locally on your device to save you time in the future.
-
-  div(
-    v-if="!loading"
-    class="p-4 sm:p-2 bg-green-300 rounded-lg text-green-700 mb-2 border-2 border-green-600 flex justify-between items-center flex-wrap sm:flex-col"
-  )
+  div(class="p-4 sm:p-2 bg-green-300 rounded-lg text-green-700 mb-2 border-2 border-green-600 flex justify-between items-center flex-wrap sm:flex-col")
     div(class="flex flex-col items-center")
       label(class="text-sm font-black") FILTER BY NAME
       input(
@@ -59,7 +51,7 @@ div(class="mt-8 bg-green-500 p-8 sm:p-2 rounded-lg")
       ) Clear Filters
 
   //- CARDS
-  div(v-if="!loading && filteredVillagers.length > 0")
+  div(v-if="filteredVillagers.length > 0")
     transition-group(
       tag="div"
       class="flex flex-wrap items-center justify-center"
@@ -72,19 +64,21 @@ div(class="mt-8 bg-green-500 p-8 sm:p-2 rounded-lg")
         :villager="v"
         @select-villager="$emit('select-villager', v)"
       )
-  div(class="text-center p-16 text-5xl text-green-700" v-else-if="!loading") NO VILLAGERS MATCH!
+  div(class="text-center p-16 text-5xl text-green-700" v-else) NO VILLAGERS MATCH!
 </template>
 
 <script>
-import { defineComponent, ref, computed, onMounted } from "vue";
-import useApi from "../composables/useApi.ts";
+import { defineComponent, ref, computed } from "vue";
 import VillagerCard from "./VillagerCard.vue";
 
 export default defineComponent({
   components: { VillagerCard },
 
-  setup() {
-    const { loading, loadingText, getVillagers, items: villagers } = useApi();
+  props: {
+    villagers: { type: Array, default: () => [] },
+  },
+
+  setup(props) {
     let nameFilter = ref("");
     let personality = ref(null);
     let hobby = ref(null);
@@ -147,37 +141,26 @@ export default defineComponent({
     ];
 
     const filteredByName = computed(() => {
-      return villagers.value.filter((v) => {
+      return props.villagers.filter((v) => {
         return v.name.toLowerCase().includes(nameFilter.value.toLowerCase());
       });
     });
 
     const filteredVillagers = computed(() => {
+      let params = filteredByName.value;
+
       if (hobby.value || personality.value || specie.value) {
-        let params = filteredByName.value;
+        if (specie.value)
+          params = params.filter((v) => v.species === specie.value);
 
-        if (specie.value) {
-          params = params.filter((v) => {
-            return v.species === specie.value;
-          });
-        }
+        if (personality.value)
+          params = params.filter((v) => v.personality === personality.value);
 
-        if (personality.value) {
-          params = params.filter((v) => {
-            return v.personality === personality.value;
-          });
-        }
-
-        if (hobby.value) {
-          params = params.filter((v) => {
-            return v.nh_details.hobby === hobby.value;
-          });
-        }
-
-        return params;
+        if (hobby.value)
+          params = params.filter((v) => v.nh_details.hobby === hobby.value);
       }
 
-      return filteredByName.value;
+      return params;
     });
 
     const hasFilters = computed(() => {
@@ -196,18 +179,11 @@ export default defineComponent({
       hobby.value = null;
     };
 
-    onMounted(() => {
-      getVillagers();
-    });
-
     return {
-      villagers,
-      loading,
       nameFilter,
       personality,
       hobby,
       specie,
-      loadingText,
       personalities,
       hobbies,
       species,
@@ -228,11 +204,9 @@ div.villager-card-container
   div.villager-card-container
     flex-basis: 20%
 
-
 @media (max-width: 1023px)
   div.villager-card-container
     flex-basis: 33%
-
 
 @media (max-width: 767px)
   div.villager-card-container
@@ -249,5 +223,4 @@ div.villager-card-container
 .cards-enter,
 .cards-leave-to
   opacity: 0
-  transform: translateY(-50px)
 </style>
