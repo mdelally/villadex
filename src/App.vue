@@ -1,5 +1,5 @@
 <template lang="pug">
-div(class="container mx-auto sm:px-2 px-8")
+div(class="container mx-auto px-8 sm:px-0")
   h1.logo.text-6xl.text-center.my-8.text-yellow-900 Villadex
   router-view
 </template>
@@ -9,17 +9,19 @@ body
   margin: 0
   padding: 0
   line-height: 1.5
-  background-color: #FFFBEB
+  background-color: #fffbeb
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fbbf24' fill-opacity='0.12' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E")
 
 h1,
 h2,
 h3,
 h4
-  font-family: "Coustard", serif
+  font-family: "Arvo", serif
 
 
 h1.logo
   transform: rotate(-6deg)
+  font-weight: 700
   color: #fbbf24
   filter: drop-shadow(4px 7px 0 rgba(0, 0, 0, 0.25))
   text-shadow: #92400e 10px 0px 0px, #92400e 9.95004px 0.998334px 0px,

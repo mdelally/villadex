@@ -18,16 +18,16 @@ div
         div: img(:src="villager.image_url" class="w-24 mr-4")
 
         div(class="ml-4 w-full sm:ml-0 sm:p-2")
-          h2(class="text-4xl text-yellow-900 text-left sm:text-center") {{ villagerName }}
+          h2(class="text-4xl text-yellow-900 text-left sm:text-center mb-2") {{ villagerName }}
 
           div(class="flex items-center border-b-2 border-yellow-500 w-full pb-2 sm:flex-col")
-            em(class="text-xl text-yellow-800 font-black mr-4") {{ villager.personality + " " + villager.species }}
-            div(class="bg-blue-200 px-3 rounded-full border-2 border-blue-600 text-blue-600 mr-2 sm:mr-0 sm:mb-2" v-if="villager.nh_details.hobby") {{ villager.nh_details.hobby }}
+            em(class="text-xl text-yellow-600 font-black mr-4") {{ villager.personality + " " + villager.species }}
+            div(class="bg-blue-200 px-3 rounded-full border-2 border-blue-600 text-blue-600 mr-2 sm:mr-0 sm:mb-2" v-if="villager.nh_details.hobby") 💖 {{ villager.nh_details.hobby }}
 
-            strong(class="bg-yellow-600 text-yellow-200 border-2 border-yellow-700 px-4 rounded-full") {{ villager.birthday_month + " " + villager.birthday_day }}
+            strong(class="bg-yellow-600 text-yellow-200 border-2 border-yellow-700 px-4 rounded-full") 🎁 {{ villager.birthday_month + " " + villager.birthday_day }}
 
           div(class="p-2 border-l-4 border-yellow-900 mt-2 italic text-yellow-800 text-xl bg-orange-200 text-left")
-            span "{{ villager.quote ? villager.quote : '???' }}"
+            span “{{ villager.quote ? villager.quote : '???' }}”
             
       //- <!-- BOTTOM SECTION - DETAILS -->
       h3(class="text-2xl text-yellow-800 mt-4") Details

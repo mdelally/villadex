@@ -1,60 +1,38 @@
 <template lang="pug">
 div(class="p-8 sm:p-2 rounded-lg")
   div(class="p-4 sm:p-2 bg-yellow-400 rounded-lg text-yellow-700 mb-2 border-2 border-yellow-600 flex justify-between items-center flex-wrap sm:flex-col")
+    //- NAME FILTER
     div(class="flex flex-col items-center")
       label(class="text-sm font-black") FILTER BY NAME
       input(
         type="text"
-        class="p-2 rounded-full bg-yellow-200 border-2 border-yellow-500 w-64 text-center"
+        class="p-2 rounded-full bg-yellow-200 border-2 border-yellow-500 w-64 text-center focus:border-yellow-900"
         v-model="nameFilter"
       )
 
+    //- FILTERS
     div(class="toolbar flex sm:flex-col flex-wrap")
-      //- <!-- SPECIES -->
-      div(class="flex flex-col items-center")
-        label(for="personality" class="text-sm font-black") SPECIES
-        select(
-          name="personality"
-          class="px-4 py-2 rounded-full bg-yellow-200 border-2 border-yellow-500"
-          v-model="specie"
-        )
-          option(:value="null" default) All
-          option(v-for="s in species" :key="s" :value="s") {{ s }}
+      //- SPECIES
+      FilterDropdown(name="species" :options="species" v-model="specie")
+      //- PERSONALITY
+      FilterDropdown(name="personality" :options="personalities" v-model="personality" class="ml-2")
+      //- HOBBY
+      FilterDropdown(name="hobby" :options="hobbies" v-model="hobby" class="ml-2")
+      //- BIRTH MONTH
+      FilterDropdown(name="birthmonth" :options="months" v-model="birthmonth" class="ml-2")
 
-      //- <!-- PERSONALITY -->
-      div(class="flex flex-col ml-2 items-center")
-        label(for="personality" class="text-sm font-black") PERSONALITY
-        select(
-          name="personality"
-          class="px-4 py-2 rounded-full bg-yellow-200 border-2 border-yellow-500"
-          v-model="personality"
-        )
-          option(:value="null" default) All
-          option(v-for="p in personalities" :key="p" :value="p") {{ p }}
-
-      //- <!-- HOBBY -->
-      div(class="flex flex-col ml-2 items-center")
-        label(for="personality" class="text-sm font-black") HOBBY
-        select(
-          name="personality"
-          class="px-4 py-2 rounded-full bg-yellow-200 border-2 border-yellow-500"
-          v-model="hobby"
-        )
-          option(:value="null" default) All
-          option(v-for="h in hobbies" :key="h" :value="h") {{ h }}
-
-      //- <!-- CLEAR FILTERS -->
+      //- CLEAR FILTERS
       button(
         class="text-yellow-700 px-6 font-bold"
         @click="clearFilters"
         v-if="hasFilters"
-      ) Clear Filters
+      ) Clear
 
   //- CARDS
   div(v-if="filteredVillagers.length > 0")
     transition-group(
       tag="div"
-      class="flex flex-wrap items-center justify-center"
+      class="flex flex-wrap items-center"
       mode="out-in"
       name="cards"
     )
@@ -70,9 +48,10 @@ div(class="p-8 sm:p-2 rounded-lg")
 <script>
 import { defineComponent, ref, computed } from "vue";
 import VillagerCard from "./VillagerCard.vue";
+import FilterDropdown from "./widgets/FilterDropdown.vue";
 
 export default defineComponent({
-  components: { VillagerCard },
+  components: { VillagerCard, FilterDropdown },
 
   props: {
     villagers: { type: Array, default: () => [] },
@@ -83,6 +62,7 @@ export default defineComponent({
     let personality = ref(null);
     let hobby = ref(null);
     let specie = ref(null);
+    let birthmonth = ref(null);
 
     const personalities = [
       "Cranky",
@@ -133,11 +113,24 @@ export default defineComponent({
       "Penguin",
       "Pig",
       "Rabbit",
-      "Rhino",
+      "Rhinoceros",
       "Sheep",
       "Squirrel",
       "Tiger",
       "Wolf",
+    ];
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
 
     const filteredByName = computed(() => {
@@ -149,7 +142,12 @@ export default defineComponent({
     const filteredVillagers = computed(() => {
       let params = filteredByName.value;
 
-      if (hobby.value || personality.value || specie.value) {
+      if (
+        hobby.value ||
+        personality.value ||
+        specie.value ||
+        birthmonth.value
+      ) {
         if (specie.value)
           params = params.filter((v) => v.species === specie.value);
 
@@ -158,6 +156,9 @@ export default defineComponent({
 
         if (hobby.value)
           params = params.filter((v) => v.nh_details.hobby === hobby.value);
+
+        if (birthmonth.value)
+          params = params.filter((v) => v.birthday_month === birthmonth.value);
       }
 
       return params;
@@ -168,7 +169,8 @@ export default defineComponent({
         nameFilter.value !== "" ||
         specie.value !== null ||
         personality.value !== null ||
-        hobby.value !== null
+        hobby.value !== null ||
+        birthmonth.value !== null
       );
     });
 
@@ -177,6 +179,7 @@ export default defineComponent({
       specie.value = null;
       personality.value = null;
       hobby.value = null;
+      birthmonth.value = null;
     };
 
     return {
@@ -184,9 +187,11 @@ export default defineComponent({
       personality,
       hobby,
       specie,
+      birthmonth,
       personalities,
       hobbies,
       species,
+      months,
       filteredByName,
       filteredVillagers,
       hasFilters,
@@ -217,10 +222,12 @@ div.villager-card-container
     flex-basis: 100%
 
 .cards-enter-active,
-.cards-leave-active
-  transition: all 0.5s ease-in-out
+.cards-leave-active,
+.cards-move
+  transition: all 0.5s ease-out
 
 .cards-enter,
 .cards-leave-to
   opacity: 0
+  transform: translateY(10px)
 </style>

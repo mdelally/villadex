@@ -5,7 +5,7 @@ div(class="villager-card-container sm:p-0 sm:pb-2 p-2")
     @click="$emit('select-villager')"
   )
     div(class="flex-col sm:flex-row-reverse")
-      h3(class="px-4 py-2 rounded-full shadow text-xl mb-2" :style="villagerName(villager.id)") {{ villager.name }}
+      h3(class="px-4 py-2 rounded-full shadow-md text-xl font-bold mb-2" :style="villagerName(villager.id)") {{ villager.name }}
       img(
         class="h-32 villager-icon"
         :src="villager.nh_details.icon_url"
@@ -16,8 +16,8 @@ div(class="villager-card-container sm:p-0 sm:pb-2 p-2")
 
     div(class="flex flex-col")
       em(class="text-yellow-900 m-2 px-3 py-1 font-black rounded-full") {{ `${villager.personality} ${villager.species}` }}
-      div(class="bg-blue-200 px-3 py-1 rounded-full mb-1 border-2 border-blue-600 text-blue-600") {{ villager.nh_details.hobby ? villager.nh_details.hobby : "???" }}
-      strong(class="bg-yellow-600 text-yellow-200 border-2 border-yellow-700 px-4 py-1 rounded-full") {{ `${villager.birthday_month} ${villager.birthday_day}` }}
+      div(class="bg-blue-200 px-3 py-1 rounded-full mb-1 border-2 border-blue-600 text-blue-600") 💖 {{ villager.nh_details.hobby ? villager.nh_details.hobby : "???" }}
+      strong(class="bg-yellow-600 text-yellow-200 border-2 border-yellow-700 px-4 py-1 rounded-full") 🎁 {{ `${villager.birthday_month} ${villager.birthday_day}` }}
 </template>
 
 <script>
@@ -53,7 +53,7 @@ export default defineComponent({
 button.villager-card
   z-index: 1
 
-  transition: all 50ms ease-out
+  transition: all 125ms ease-out
 
   &:hover
     transform: translateY(-3em) translateZ(3px) scale(1.1) rotateZ(-3deg)

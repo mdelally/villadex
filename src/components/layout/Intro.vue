@@ -1,8 +1,8 @@
 <template lang="pug">
 div
-  p.mb-2 Quickly search and learn about <em>Animal Crossing: New Horizons®</em> villagers.
+  p.mb-2 Quickly search and learn about <em>Animal Crossing: New Horizons®</em> villagers
   
-  p This data is brought to you by the 
+  p Data provided by the 
     a(href="https://api.nookipedia.com/") Nookipedia API
 </template>
 

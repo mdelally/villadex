@@ -1,5 +1,5 @@
 <template lang="pug">
-div(class="bg-yellow-300 rounded-lg p-4 text-center text-yellow-900 mb-16")
+div(class="bg-yellow-300 rounded-lg p-4 sm:p-2 text-center text-yellow-900 mb-16 sm:rounded-none")
   div(class="grid grid-cols-2 gap-4 sm:grid-cols-none")
     div.p-2.justify-end
       Intro
