@@ -1,7 +1,7 @@
 <template lang="pug">
 div(class="villager-card-container sm:p-0 sm:pb-2 p-2")
   button(
-    class="w-full villager-card bg-green-200 rounded-lg sm:p-2 p-4 flex flex-col sm:flex-row justify-center items-center sm:justify-between hover:bg-green-100 border-4 border-transparent hover:border-green-700"
+    class="w-full villager-card bg-yellow-200 rounded-lg sm:p-2 p-4 flex flex-col sm:flex-row justify-center items-center sm:justify-between hover:bg-yellow-100 border-4 border-transparent hover:border-yellow-700"
     @click="$emit('select-villager')"
   )
     div(class="flex-col sm:flex-row-reverse")
@@ -15,9 +15,9 @@ div(class="villager-card-container sm:p-0 sm:pb-2 p-2")
       img(class="h-32 w-full p-2 villager-icon" :src="leaf" v-else)
 
     div(class="flex flex-col")
-      em(class="text-green-900 m-2 px-3 py-1 font-black rounded-full") {{ `${villager.personality} ${villager.species}` }}
+      em(class="text-yellow-900 m-2 px-3 py-1 font-black rounded-full") {{ `${villager.personality} ${villager.species}` }}
       div(class="bg-blue-200 px-3 py-1 rounded-full mb-1 border-2 border-blue-600 text-blue-600") {{ villager.nh_details.hobby ? villager.nh_details.hobby : "???" }}
-      strong(class="bg-green-600 text-green-200 border-2 border-green-700 px-4 py-1 rounded-full") {{ `${villager.birthday_month} ${villager.birthday_day}` }}
+      strong(class="bg-yellow-600 text-yellow-200 border-2 border-yellow-700 px-4 py-1 rounded-full") {{ `${villager.birthday_month} ${villager.birthday_day}` }}
 </template>
 
 <script>
@@ -53,10 +53,10 @@ export default defineComponent({
 button.villager-card
   z-index: 1
 
-  transition: all 100ms ease-in-out
+  transition: all 50ms ease-out
 
   &:hover
-    transform: translateY(-2em) translateZ(3px) scale(1.1) rotateZ(-3deg)
+    transform: translateY(-3em) translateZ(3px) scale(1.1) rotateZ(-3deg)
     box-shadow: 7px 7px 0px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.2)
 
   h3

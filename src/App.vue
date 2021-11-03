@@ -9,7 +9,7 @@ body
   margin: 0
   padding: 0
   line-height: 1.5
-  background-color: #ecfdf5
+  background-color: #FFFBEB
 
 h1,
 h2,

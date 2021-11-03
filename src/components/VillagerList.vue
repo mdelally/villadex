@@ -1,11 +1,11 @@
 <template lang="pug">
-div(class="mt-8 bg-green-500 p-8 sm:p-2 rounded-lg")
-  div(class="p-4 sm:p-2 bg-green-300 rounded-lg text-green-700 mb-2 border-2 border-green-600 flex justify-between items-center flex-wrap sm:flex-col")
+div(class="p-8 sm:p-2 rounded-lg")
+  div(class="p-4 sm:p-2 bg-yellow-400 rounded-lg text-yellow-700 mb-2 border-2 border-yellow-600 flex justify-between items-center flex-wrap sm:flex-col")
     div(class="flex flex-col items-center")
       label(class="text-sm font-black") FILTER BY NAME
       input(
         type="text"
-        class="p-2 rounded-full bg-green-200 border-2 border-green-400 w-64 text-center"
+        class="p-2 rounded-full bg-yellow-200 border-2 border-yellow-500 w-64 text-center"
         v-model="nameFilter"
       )
 
@@ -15,7 +15,7 @@ div(class="mt-8 bg-green-500 p-8 sm:p-2 rounded-lg")
         label(for="personality" class="text-sm font-black") SPECIES
         select(
           name="personality"
-          class="px-4 py-2 rounded-full bg-green-200 border-2 border-green-400"
+          class="px-4 py-2 rounded-full bg-yellow-200 border-2 border-yellow-500"
           v-model="specie"
         )
           option(:value="null" default) All
@@ -26,7 +26,7 @@ div(class="mt-8 bg-green-500 p-8 sm:p-2 rounded-lg")
         label(for="personality" class="text-sm font-black") PERSONALITY
         select(
           name="personality"
-          class="px-4 py-2 rounded-full bg-green-200 border-2 border-green-400"
+          class="px-4 py-2 rounded-full bg-yellow-200 border-2 border-yellow-500"
           v-model="personality"
         )
           option(:value="null" default) All
@@ -37,7 +37,7 @@ div(class="mt-8 bg-green-500 p-8 sm:p-2 rounded-lg")
         label(for="personality" class="text-sm font-black") HOBBY
         select(
           name="personality"
-          class="px-4 py-2 rounded-full bg-green-200 border-2 border-green-400"
+          class="px-4 py-2 rounded-full bg-yellow-200 border-2 border-yellow-500"
           v-model="hobby"
         )
           option(:value="null" default) All
@@ -45,7 +45,7 @@ div(class="mt-8 bg-green-500 p-8 sm:p-2 rounded-lg")
 
       //- <!-- CLEAR FILTERS -->
       button(
-        class="text-green-700 px-6 font-bold"
+        class="text-yellow-700 px-6 font-bold"
         @click="clearFilters"
         v-if="hasFilters"
       ) Clear Filters
@@ -64,7 +64,7 @@ div(class="mt-8 bg-green-500 p-8 sm:p-2 rounded-lg")
         :villager="v"
         @select-villager="$emit('select-villager', v)"
       )
-  div(class="text-center p-16 text-5xl text-green-700" v-else) NO VILLAGERS MATCH!
+  div(class="text-center p-16 text-5xl text-yellow-700" v-else) NO VILLAGERS MATCH!
 </template>
 
 <script>
@@ -111,7 +111,7 @@ export default defineComponent({
       "Cat",
       "Chicken",
       "Cow",
-      "Cub",
+      "Bear cub",
       "Deer",
       "Dog",
       "Duck",

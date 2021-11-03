@@ -6,11 +6,11 @@ div
   )
 
   div(class="info-container flex items-center justify-center")
-    div(class="info-modal w-4/5 sm:w-full bg-green-100 sm:p-2 sm:pt-0 p-8 pt-4 rounded-lg")
-      div(class="flex justify-end sm:p-2 sm:sticky sm:top-0 bg-green-100")
+    div(class="info-modal w-4/5 sm:w-full bg-yellow-100 sm:p-2 sm:pt-0 p-8 pt-4 rounded-lg")
+      div(class="flex justify-end sm:p-2 sm:sticky sm:top-0 bg-yellow-100")
         button(
           @click="$emit('close-info')"
-          class="bg-green-800 py-2 px-4 text-green-100 hover:bg-green-100 border-2 border-transparent hover:border-green-800 hover:text-green-800 rounded-full font-bold sm:text-xs"
+          class="bg-yellow-800 py-2 px-4 text-yellow-100 hover:bg-yellow-100 border-2 border-transparent hover:border-yellow-800 hover:text-yellow-800 rounded-full font-bold sm:text-xs"
         ) CLOSE
 
       //- // TOP SECTION - GENERAL basic AND IMAGE
@@ -18,45 +18,45 @@ div
         div: img(:src="villager.image_url" class="w-24 mr-4")
 
         div(class="ml-4 w-full sm:ml-0 sm:p-2")
-          h2(class="text-4xl text-green-900 text-left sm:text-center") {{ villagerName }}
+          h2(class="text-4xl text-yellow-900 text-left sm:text-center") {{ villagerName }}
 
-          div(class="flex items-center border-b-2 border-green-500 w-full pb-2 sm:flex-col")
-            em(class="text-xl text-green-800 font-black mr-4") {{ villager.personality + " " + villager.species }}
+          div(class="flex items-center border-b-2 border-yellow-500 w-full pb-2 sm:flex-col")
+            em(class="text-xl text-yellow-800 font-black mr-4") {{ villager.personality + " " + villager.species }}
             div(class="bg-blue-200 px-3 rounded-full border-2 border-blue-600 text-blue-600 mr-2 sm:mr-0 sm:mb-2" v-if="villager.nh_details.hobby") {{ villager.nh_details.hobby }}
 
-            strong(class="bg-green-600 text-green-200 border-2 border-green-700 px-4 rounded-full") {{ villager.birthday_month + " " + villager.birthday_day }}
+            strong(class="bg-yellow-600 text-yellow-200 border-2 border-yellow-700 px-4 rounded-full") {{ villager.birthday_month + " " + villager.birthday_day }}
 
-          div(class="p-2 border-l-4 border-green-900 mt-2 italic text-green-800 text-xl bg-orange-200 text-left")
+          div(class="p-2 border-l-4 border-yellow-900 mt-2 italic text-yellow-800 text-xl bg-orange-200 text-left")
             span "{{ villager.quote ? villager.quote : '???' }}"
             
       //- <!-- BOTTOM SECTION - DETAILS -->
-      h3(class="text-2xl text-green-800 mt-4") Details
-      div(class="bottom-section py-2 mt-2 text-green-900")
+      h3(class="text-2xl text-yellow-800 mt-4") Details
+      div(class="bottom-section py-2 mt-2 text-yellow-900")
         //- <!-- INFO -->
         div(class="info-section")
           div(
             v-for="d in availableDetails"
             :key="d[0]"
-            class="bg-green-300 mb-1 rounded-full flex"
+            class="bg-yellow-300 mb-1 rounded-full flex"
           )
             div(
-              class="detail-label rounded-full font-bold uppercase bg-green-700 text-green-200 px-2 py-1 sm:min-w-max"
+              class="detail-label rounded-full font-bold uppercase bg-yellow-700 text-yellow-200 px-2 py-1 sm:min-w-max"
             ) {{ detailLabel(d[0]) }}:
             div(class="px-2 py-1") {{ parseDetail(d[1]) }}
 
         //- <!-- HOUSE INFO -->
-        div(class="house-info-section p-4 bg-green-300 rounded-xl flex sm:flex-col sm:items-center justify-evenly mt-4")
-          div(class="flex flex-col items-center text-xl text-green-800 mb-2 p-2 w-64")
+        div(class="house-info-section p-4 bg-yellow-300 rounded-xl flex sm:flex-col sm:items-center justify-evenly mt-4")
+          div(class="flex flex-col items-center text-xl text-yellow-800 mb-2 p-2 w-64")
             h4 House Exterior
             a(:href="villager.nh_details.house_exterior_url" target="_blank")
               img(:src="villager.nh_details.house_exterior_url")
 
-          div(class="flex flex-col items-center text-xl text-green-800 mb-2 p-2 w-64")
+          div(class="flex flex-col items-center text-xl text-yellow-800 mb-2 p-2 w-64")
             h4 House Interior
             a(:href="villager.nh_details.house_interior_url" target="_blank")
               img(:src="villager.nh_details.house_interior_url")
 
-          div(class="flex flex-col items-center text-xl text-green-800 mb-2 p-2 w-64")
+          div(class="flex flex-col items-center text-xl text-yellow-800 mb-2 p-2 w-64")
             h4 Villager Photo
             a(:href="villager.nh_details.photo_url" target="_blank")
               img(:src="villager.nh_details.photo_url")

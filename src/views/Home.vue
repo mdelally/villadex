@@ -1,12 +1,12 @@
 <template lang="pug">
-div(class="bg-green-200 rounded-lg p-4 text-center text-green-900 mb-16")
+div(class="bg-yellow-300 rounded-lg p-4 text-center text-yellow-900 mb-16")
   div(class="grid grid-cols-2 gap-4 sm:grid-cols-none")
-    div.p-2
+    div.p-2.justify-end
       Intro
 
-    div.self-center
+    div
       button(
-        class="hover:bg-green-800 hover:text-green-200 font-bold px-8 py-2 mt-4 rounded-full hover:border-transparent border-2 border-green-800 text-green-800 bg-transparent"
+        class="hover:bg-yellow-800 hover:text-yellow-200 font-bold px-8 py-2 mt-4 rounded-full hover:border-transparent border-2 border-yellow-800 text-yellow-800 bg-transparent"
         @click="clearData"
       )
         span Clear and Update Villager Data
