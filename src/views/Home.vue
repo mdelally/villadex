@@ -1,5 +1,5 @@
 <template lang="pug">
-div(class="bg-yellow-300 rounded-lg p-4 sm:p-2 text-center text-yellow-900 mb-16 sm:rounded-none")
+div(class="appContainer bg-yellow-300 rounded-lg p-4 sm:p-2 text-center text-yellow-900 mb-16 sm:rounded-none")
   div(class="grid grid-cols-2 gap-4 sm:grid-cols-none")
     div.p-2.justify-end
       Intro
@@ -61,3 +61,8 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="stylus">
+div.appContainer
+  box-shadow: 7px 7px 0px rgba(146, 64, 14, 0.25)
+</style>

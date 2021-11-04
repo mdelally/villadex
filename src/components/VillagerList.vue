@@ -1,12 +1,12 @@
 <template lang="pug">
 div(class="p-8 sm:p-2 rounded-lg")
-  div(class="p-4 sm:p-2 bg-yellow-400 rounded-lg text-yellow-700 mb-2 border-2 border-yellow-600 flex justify-between items-center flex-wrap sm:flex-col")
+  div(class="filterControls bg-yellow-400 p-4 sm:p-2 rounded-lg text-yellow-700 mb-2 border-2 border-yellow-600 flex justify-between items-center flex-wrap sm:flex-col")
     //- NAME FILTER
     div(class="flex flex-col items-center")
       label(class="text-sm font-black") FILTER BY NAME
       input(
         type="text"
-        class="p-2 rounded-full bg-yellow-200 border-2 border-yellow-500 w-64 text-center focus:border-yellow-900"
+        class="p-2 rounded-full bg-yellow-200 border-2 border-yellow-500 w-64 text-center focus:border-yellow-900 focus:outline-none"
         v-model="nameFilter"
       )
 

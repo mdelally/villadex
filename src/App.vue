@@ -23,7 +23,7 @@ h1.logo
   transform: rotate(-6deg)
   font-weight: 700
   color: #fbbf24
-  filter: drop-shadow(4px 7px 0 rgba(0, 0, 0, 0.25))
+  filter: drop-shadow(4px 7px 0 rgba(146, 64, 14, 0.25))
   text-shadow: #92400e 10px 0px 0px, #92400e 9.95004px 0.998334px 0px,
     #92400e 9.80067px 1.98669px 0px, #92400e 9.55336px 2.9552px 0px,
     #92400e 9.21061px 3.89418px 0px, #92400e 8.77583px 4.79426px 0px,

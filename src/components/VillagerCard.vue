@@ -57,7 +57,7 @@ button.villager-card
 
   &:hover
     transform: translateY(-3em) translateZ(3px) scale(1.1) rotateZ(-3deg)
-    box-shadow: 7px 7px 0px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.2)
+    box-shadow: 7px 7px 0px rgba(146, 46, 14, 0.25), 0 0 10px rgba(146, 46, 14, 0.2)
 
   h3
     border-radius: 30px 52% 52% 48%/32px 58% 34px 68%

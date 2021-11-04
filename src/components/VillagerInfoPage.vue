@@ -2,6 +2,7 @@
 div
   div(
     class="info-shade flex items-center justify-center backdrop-filter backdrop-blur"
+    tabindex="0"
     @click="$emit('close-info')"
   )
 
@@ -63,13 +64,13 @@ div
 </template>
 
 <script>
-import { defineComponent, watch, computed } from "vue";
+import { defineComponent, watch, computed, onMounted } from "vue";
 
 export default defineComponent({
   props: {
     villager: { type: Object, default: null },
   },
-  setup(props) {
+  setup(props, context) {
     const availableDetailList = [
       "id",
       "gender",
@@ -86,6 +87,12 @@ export default defineComponent({
       "fav_colors",
       "fav_styles",
     ];
+
+    onMounted(() => {
+      window.addEventListener("keyup", (ev) => {
+        if (ev.code === 27) context.emit("close-info");
+      });
+    });
 
     watch(props.villager, (value) => {
       if (value !== null)
