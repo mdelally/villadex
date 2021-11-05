@@ -45,8 +45,9 @@ div(class="p-8 sm:p-2 rounded-lg")
   div(class="text-center p-16 text-5xl text-yellow-700" v-else) NO VILLAGERS MATCH!
 </template>
 
-<script>
-import { defineComponent, ref, computed } from "vue";
+<script lang="ts">
+import { Villager } from "@/composables/useData";
+import { defineComponent, ref, computed, PropType } from "vue";
 import VillagerCard from "./VillagerCard.vue";
 import FilterDropdown from "./widgets/FilterDropdown.vue";
 
@@ -54,7 +55,7 @@ export default defineComponent({
   components: { VillagerCard, FilterDropdown },
 
   props: {
-    villagers: { type: Array, default: () => [] },
+    villagers: { type: Array as PropType<Villager[]>, default: () => [] },
   },
 
   setup(props) {

@@ -6,8 +6,19 @@ const baseURL: string = process.env.VUE_APP_NOOKIPEDIA_BASE_URL;
 const storageKey: string = process.env.VUE_APP_LOCAL_STORAGE_KEY;
 const storage: string | null = localStorage.getItem(storageKey);
 
-const villagers = ref([]);
-const currentVillager = ref(null);
+export interface Villager {
+  id: string;
+  name: string;
+  species: string;
+  personality: string;
+  hobby: string;
+  gender: string;
+  nh_details: Record<string, unknown>;
+  birthday_month: string;
+}
+
+const villagers = ref<Villager[]>([]);
+const currentVillager = ref<Villager | null>(null);
 
 function get(endpoint: string) {
   return axios.get(baseURL + endpoint, {
@@ -22,9 +33,21 @@ export default function useData() {
   const loading = ref(true);
   const loadingText = ref("LOADING...");
 
+  const setVillager = (v: Villager) => {
+    currentVillager.value = v;
+  };
+
+  const getVillagerById = (id: string) => {
+    const villager: Villager = villagers.value.find(
+      (v) => v.id === id
+    ) as Villager;
+
+    currentVillager.value = villager;
+  };
+
   const getVillagers = (filters = "") => {
     if (storage) {
-      villagers.value = JSON.parse(storage!);
+      villagers.value = JSON.parse(storage);
       loading.value = false;
       return;
     }
@@ -48,6 +71,8 @@ export default function useData() {
   };
 
   return {
+    setVillager,
+    getVillagerById,
     getVillagers,
     clearData,
     villagers,

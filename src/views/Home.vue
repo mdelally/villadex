@@ -25,7 +25,8 @@ div(class="appContainer bg-yellow-300 rounded-lg p-4 sm:p-2 text-center text-yel
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
 import useData from "@/composables/useData";
 import Intro from "@/components/layout/Intro.vue";
 import VillagerList from "@/components/VillagerList.vue";
@@ -35,12 +36,24 @@ import Footer from "@/components/layout/Footer.vue";
 export default defineComponent({
   components: { Intro, VillagerList, VillagerInfoPage, Footer },
   setup() {
-    const { getVillagers, clearData, villagers, currentVillager, loading } =
-      useData();
+    const {
+      setVillager,
+      getVillagerById,
+      getVillagers,
+      clearData,
+      villagers,
+      currentVillager,
+      loading,
+    } = useData();
+    const route = useRoute();
 
-    const setVillager = (v: any) => {
-      currentVillager.value = v;
-    };
+    watch(villagers, () => {
+      const id = route.params.id;
+
+      if (id && villagers.value !== null) {
+        getVillagerById(id.toString());
+      }
+    });
 
     const closeInfo = () => {
       currentVillager.value = null;

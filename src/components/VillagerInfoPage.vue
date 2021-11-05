@@ -9,14 +9,12 @@ div
   div(class="info-container flex items-center justify-center")
     div(class="info-modal w-4/5 sm:w-full bg-yellow-100 sm:p-2 sm:pt-0 p-8 pt-4 rounded-lg")
       div(class="flex justify-end sm:p-2 sm:sticky sm:top-0 bg-yellow-100")
-        button(
-          @click="$emit('close-info')"
-          class="bg-yellow-800 py-2 px-4 text-yellow-100 hover:bg-yellow-100 border-2 border-transparent hover:border-yellow-800 hover:text-yellow-800 rounded-full font-bold sm:text-xs"
-        ) CLOSE
+        Button(@click="share" class="mr-2") SHARE
+        Button(@click="$emit('close-info')") CLOSE
 
       //- // TOP SECTION - GENERAL basic AND IMAGE
       div(class="flex sm:flex-col sm:items-center")
-        div: img(:src="villager.image_url" class="w-24 mr-4")
+        div: img(:src="villager.image_url" class="w-32 mr-4")
 
         div(class="ml-4 w-full sm:ml-0 sm:p-2")
           h2(class="text-4xl text-yellow-900 text-left sm:text-center mb-2") {{ villagerName }}
@@ -63,12 +61,15 @@ div
               img(:src="villager.nh_details.photo_url")
 </template>
 
-<script>
-import { defineComponent, watch, computed, onMounted } from "vue";
+<script lang="ts">
+import { defineComponent, watch, computed, onMounted, PropType } from "vue";
+import { Villager } from "@/composables/useData";
+import Button from "./widgets/Button.vue";
 
 export default defineComponent({
+  components: { Button },
   props: {
-    villager: { type: Object, default: null },
+    villager: { type: Object as PropType<Villager>, default: () => ({}) },
   },
   setup(props, context) {
     const availableDetailList = [
@@ -90,15 +91,32 @@ export default defineComponent({
 
     onMounted(() => {
       window.addEventListener("keyup", (ev) => {
-        if (ev.code === 27) context.emit("close-info");
+        if (ev.code === "27") context.emit("close-info");
       });
     });
 
     watch(props.villager, (value) => {
       if (value !== null)
-        document.querySelector("html").classList.add("menuOpen");
-      else document.querySelector("html").classList.remove("menuOpen");
+        document.querySelector("html")!.classList.add("menuOpen");
+      else document.querySelector("html")!.classList.remove("menuOpen");
     });
+
+    const share = async function () {
+      const data = {
+        title: `${props.villager.name} at Villadex`,
+        url: `https://villadex.netlify.app/#/v/${props.villager.id}`,
+      };
+
+      try {
+        await navigator.share(data);
+      } catch {
+        await navigator.clipboard.writeText(
+          `https://villadex.netlify.app/#/v/${props.villager.id}`
+        );
+
+        alert(`${props.villager.name}'s URL has been copied to the clipboard!`);
+      }
+    };
 
     const villagerName = computed(() => {
       let gender = props.villager.gender === "Male" ? "♂" : "♀";
@@ -120,11 +138,11 @@ export default defineComponent({
       return basic.concat(nh);
     });
 
-    const detailLabel = (label) => {
+    const detailLabel = (label: string) => {
       return label.replace("_", " ").replace("house", "");
     };
 
-    const parseDetail = (detail) => {
+    const parseDetail = (detail: string) => {
       if (detail === "" || (Array.isArray(detail) && detail.length === 0))
         return "???";
 
@@ -133,7 +151,14 @@ export default defineComponent({
       return detail;
     };
 
-    return { props, villagerName, availableDetails, detailLabel, parseDetail };
+    return {
+      props,
+      villagerName,
+      availableDetails,
+      share,
+      detailLabel,
+      parseDetail,
+    };
   },
 });
 </script>
