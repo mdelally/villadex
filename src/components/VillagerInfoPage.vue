@@ -9,8 +9,9 @@ div
   div(class="info-container flex items-center justify-center")
     div(class="info-modal w-4/5 sm:w-full bg-yellow-100 sm:p-2 sm:pt-0 p-8 pt-4 rounded-lg")
       div(class="flex justify-end sm:p-2 sm:sticky sm:top-0 bg-yellow-100")
-        Button(@click="share" class="mr-2") SHARE
-        Button(@click="$emit('close-info')") CLOSE
+        Button(is-link :href="villager.url" addon-class="mr-2" target="_blank") MORE INFO
+        Button(@click="share" addon-class="mr-2" :is-link="false" v-if="canUseShareApi") SHARE
+        Button(@click="$emit('close-info')" :is-link="false") CLOSE
 
       //- // TOP SECTION - GENERAL basic AND IMAGE
       div(class="flex sm:flex-col sm:items-center")
@@ -62,7 +63,7 @@ div
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, computed, onMounted, PropType } from "vue";
+import { defineComponent, watch, computed, PropType } from "vue";
 import { Villager } from "@/composables/useData";
 import Button from "./widgets/Button.vue";
 
@@ -71,7 +72,7 @@ export default defineComponent({
   props: {
     villager: { type: Object as PropType<Villager>, default: () => ({}) },
   },
-  setup(props, context) {
+  setup(props) {
     const availableDetailList = [
       "id",
       "gender",
@@ -88,12 +89,11 @@ export default defineComponent({
       "fav_colors",
       "fav_styles",
     ];
+    let navigator: any;
 
-    onMounted(() => {
-      window.addEventListener("keyup", (ev) => {
-        if (ev.code === "27") context.emit("close-info");
-      });
-    });
+    navigator = window.navigator;
+
+    const canUseShareApi = navigator.canShare;
 
     watch(props.villager, (value) => {
       if (value !== null)
@@ -101,21 +101,13 @@ export default defineComponent({
       else document.querySelector("html")!.classList.remove("menuOpen");
     });
 
-    const share = async function () {
+    const share = function () {
       const data = {
         title: `${props.villager.name} at Villadex`,
         url: `https://villadex.netlify.app/#/v/${props.villager.id}`,
       };
 
-      try {
-        await navigator.share(data);
-      } catch {
-        await navigator.clipboard.writeText(
-          `https://villadex.netlify.app/#/v/${props.villager.id}`
-        );
-
-        alert(`${props.villager.name}'s URL has been copied to the clipboard!`);
-      }
+      navigator.share(data);
     };
 
     const villagerName = computed(() => {
@@ -155,6 +147,7 @@ export default defineComponent({
       props,
       villagerName,
       availableDetails,
+      canUseShareApi,
       share,
       detailLabel,
       parseDetail,

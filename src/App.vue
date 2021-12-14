@@ -64,4 +64,7 @@ a
 
   &:hover
     opacity: 0.8
+
+button
+  transition: all 0.2s ease-in-out
 </style>
