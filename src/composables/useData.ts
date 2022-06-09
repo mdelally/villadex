@@ -52,7 +52,7 @@ export default function useData() {
       return;
     }
 
-    get("villagers?game=nh&nhdetails=true" + filters)
+    get("villagers?game=nh&nhdetails=true&thumbsize=125" + filters)
       .then((results) => {
         villagers.value = results.data;
         localStorage.setItem(storageKey, JSON.stringify(results.data));
