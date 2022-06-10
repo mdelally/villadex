@@ -101,7 +101,7 @@ export default defineComponent({
     const share = function () {
       const data = {
         title: `${currentVillager.value?.name} at Villadex`,
-        url: `https://villadex.netlify.app/#/v/${currentVillager.value?.id}`,
+        url: `https://villadex.netlify.app/v/${currentVillager.value?.id}`,
       };
 
       navigator.share(data);
