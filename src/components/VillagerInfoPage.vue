@@ -15,7 +15,7 @@ div
 
       //- // TOP SECTION - GENERAL basic AND IMAGE
       div(class="flex sm:flex-col sm:items-center")
-        div: img(:src="currentVillager.image_url" class="w-32 mr-4")
+        div: img(:src="currentVillager.image_url" class="w-auto h-36 mr-4" height="144")
 
         div(class="ml-4 w-full sm:ml-0 sm:p-2")
           h2(class="text-4xl text-yellow-900 text-left sm:text-center mb-2") {{ villagerName }}
@@ -141,7 +141,7 @@ export default defineComponent({
     };
 
     const closeInfo = () => {
-      router.go(-1);
+      router.replace({ name: "Home" });
     };
 
     onMounted(() => {
