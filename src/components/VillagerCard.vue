@@ -2,10 +2,10 @@
 div(class="villager-card-container sm:p-0 sm:pb-2 p-2")
   button(
     class="w-full villager-card bg-yellow-200 rounded-lg sm:p-2 p-4 flex flex-col sm:flex-row justify-center items-center sm:justify-between hover:bg-yellow-100 border-4 border-transparent hover:border-yellow-700"
-    @click="$emit('select-villager')"
+    @click="router.push({name: 'Villager', params: { id: villager.id}})"
   )
     div(class="flex-col sm:flex-row-reverse")
-      h3(class="px-4 py-2 rounded-full shadow-md text-xl font-bold mb-2" :style="villagerName(villager.id)") {{ villager.name }}
+      h3(class="px-4 py-2 rounded-full shadow-md text-xl font-bold mb-2" :style="villagerName()") {{ villager.name }}
       img(
         class="h-32 villager-icon"
         :src="villager.nh_details.icon_url"
@@ -22,6 +22,7 @@ div(class="villager-card-container sm:p-0 sm:pb-2 p-2")
 
 <script>
 import { defineComponent } from "vue";
+import { useRouter } from "vue-router";
 import leaf from "@/assets/leaf.svg";
 
 export default defineComponent({
@@ -30,11 +31,13 @@ export default defineComponent({
   },
 
   setup(props) {
+    const router = useRouter();
+
     const villagerName = () => {
-      let color = props.villager.text_color
+      const color = props.villager.text_color
         ? `#${props.villager.text_color}`
         : "#222";
-      let backgroundColor = props.villager.title_color
+      const backgroundColor = props.villager.title_color
         ? `#${props.villager.title_color}`
         : "#FFF";
 
@@ -44,7 +47,7 @@ export default defineComponent({
       };
     };
 
-    return { leaf, villagerName };
+    return { leaf, villagerName, router };
   },
 });
 </script>

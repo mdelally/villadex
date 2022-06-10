@@ -13,13 +13,10 @@ div(class="appContainer bg-yellow-300 rounded-lg p-4 sm:p-2 text-center text-yel
 
   VillagerList(@select-villager="setVillager" :villagers="villagers" v-if="!loading")
   div(class="p-16 flex justify-center" v-else): img(src="../assets/gyroid.gif")
+  
+  //- VillagerInfoPage inserted via router
+  router-view
 
-  transition(mode="out-in" name="info")
-    VillagerInfoPage(
-      v-if="currentVillager"
-      :villager="currentVillager"
-      @close-info="closeInfo"
-    )
 
   Footer
 </template>
@@ -45,6 +42,7 @@ export default defineComponent({
       currentVillager,
       loading,
     } = useData();
+
     const route = useRoute();
 
     watch(villagers, () => {

@@ -3,31 +3,31 @@ div
   div(
     class="info-shade flex items-center justify-center backdrop-filter backdrop-blur"
     tabindex="0"
-    @click="$emit('close-info')"
+    @click="closeInfo"
   )
 
-  div(class="info-container flex items-center justify-center")
+  div(class="info-container flex items-center justify-center" v-if="currentVillager")
     div(class="info-modal w-4/5 sm:w-full bg-yellow-100 sm:p-2 sm:pt-0 p-8 pt-4 rounded-lg")
       div(class="flex justify-end sm:p-2 sm:sticky sm:top-0 bg-yellow-100")
-        Button(is-link :href="villager.url" addon-class="mr-2" target="_blank") MORE INFO
+        Button(is-link :href="currentVillager.url" addon-class="mr-2" target="_blank") MORE INFO
         Button(@click="share" addon-class="mr-2" :is-link="false" v-if="canUseShareApi") SHARE
-        Button(@click="$emit('close-info')" :is-link="false") CLOSE
+        Button(@click="closeInfo" :is-link="false") CLOSE
 
       //- // TOP SECTION - GENERAL basic AND IMAGE
       div(class="flex sm:flex-col sm:items-center")
-        div: img(:src="villager.image_url" class="w-32 mr-4")
+        div: img(:src="currentVillager.image_url" class="w-32 mr-4")
 
         div(class="ml-4 w-full sm:ml-0 sm:p-2")
           h2(class="text-4xl text-yellow-900 text-left sm:text-center mb-2") {{ villagerName }}
 
           div(class="flex items-center border-b-2 border-yellow-500 w-full pb-2 sm:flex-col")
-            em(class="text-xl text-yellow-600 font-black mr-4") {{ villager.personality + " " + villager.species }}
-            div(class="bg-blue-200 px-3 rounded-full border-2 border-blue-600 text-blue-600 mr-2 sm:mr-0 sm:mb-2" v-if="villager.nh_details.hobby") 💖 {{ villager.nh_details.hobby }}
+            em(class="text-xl text-yellow-600 font-black mr-4") {{ currentVillager.personality + " " + currentVillager.species }}
+            div(class="bg-blue-200 px-3 rounded-full border-2 border-blue-600 text-blue-600 mr-2 sm:mr-0 sm:mb-2" v-if="currentVillager.nh_details.hobby") 💖 {{ currentVillager.nh_details.hobby }}
 
-            strong(class="bg-yellow-600 text-yellow-200 border-2 border-yellow-700 px-4 rounded-full") 🎁 {{ villager.birthday_month + " " + villager.birthday_day }}
+            strong(class="bg-yellow-600 text-yellow-200 border-2 border-yellow-700 px-4 rounded-full") 🎁 {{ currentVillager.birthday_month + " " + currentVillager.birthday_day }}
 
           div(class="p-2 border-l-4 border-yellow-900 mt-2 italic text-yellow-800 text-xl bg-orange-200 text-left")
-            span “{{ villager.quote ? villager.quote : '???' }}”
+            span “{{ currentVillager.quote ? currentVillager.quote : '???' }}”
             
       //- <!-- BOTTOM SECTION - DETAILS -->
       h3(class="text-2xl text-yellow-800 mt-4") Details
@@ -48,31 +48,31 @@ div
         div(class="house-info-section p-4 bg-yellow-300 rounded-xl flex sm:flex-col sm:items-center justify-evenly mt-4")
           div(class="flex flex-col items-center text-xl text-yellow-800 mb-2 p-2 w-64")
             h4 House Exterior
-            a(:href="villager.nh_details.house_exterior_url" target="_blank")
-              img(:src="villager.nh_details.house_exterior_url")
+            a(:href="currentVillager.nh_details.house_exterior_url" target="_blank")
+              img(:src="currentVillager.nh_details.house_exterior_url")
 
           div(class="flex flex-col items-center text-xl text-yellow-800 mb-2 p-2 w-64")
             h4 House Interior
-            a(:href="villager.nh_details.house_interior_url" target="_blank")
-              img(:src="villager.nh_details.house_interior_url")
+            a(:href="currentVillager.nh_details.house_interior_url" target="_blank")
+              img(:src="currentVillager.nh_details.house_interior_url")
 
           div(class="flex flex-col items-center text-xl text-yellow-800 mb-2 p-2 w-64")
             h4 Villager Photo
-            a(:href="villager.nh_details.photo_url" target="_blank")
-              img(:src="villager.nh_details.photo_url")
+            a(:href="currentVillager.nh_details.photo_url" target="_blank")
+              img(:src="currentVillager.nh_details.photo_url")
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, computed, PropType } from "vue";
-import { Villager } from "@/composables/useData";
+import { defineComponent, computed, onMounted, onUnmounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import useData from "@/composables/useData";
 import Button from "./widgets/Button.vue";
 
 export default defineComponent({
   components: { Button },
-  props: {
-    villager: { type: Object as PropType<Villager>, default: () => ({}) },
-  },
-  setup(props) {
+  setup() {
+    const { getVillagerById, currentVillager } = useData();
+
     const availableDetailList = [
       "id",
       "gender",
@@ -91,43 +91,40 @@ export default defineComponent({
     ];
     let navigator: any;
 
+    const router = useRouter();
+    const route = useRoute();
+
     navigator = window.navigator;
 
     const canUseShareApi = navigator.canShare;
 
-    watch(props.villager, (value) => {
-      if (value !== null)
-        document.querySelector("html")!.classList.add("menuOpen");
-      else document.querySelector("html")!.classList.remove("menuOpen");
-    });
-
     const share = function () {
       const data = {
-        title: `${props.villager.name} at Villadex`,
-        url: `https://villadex.netlify.app/#/v/${props.villager.id}`,
+        title: `${currentVillager.value?.name} at Villadex`,
+        url: `https://villadex.netlify.app/#/v/${currentVillager.value?.id}`,
       };
 
       navigator.share(data);
     };
 
     const villagerName = computed(() => {
-      let gender = props.villager.gender === "Male" ? "♂" : "♀";
+      let gender = currentVillager.value?.gender === "Male" ? "♂" : "♀";
 
-      return `${props.villager.name} ${gender}`;
+      return `${currentVillager.value?.name} ${gender}`;
     });
 
     const availableDetails = computed(() => {
-      if (props.villager === null) return [];
+      if (currentVillager.value === null) return [];
 
-      let basic = Object.entries(props.villager).filter((e) => {
+      let basic = Object.entries(currentVillager.value).filter((e) => {
         return availableDetailList.includes(e[0]);
       });
 
-      let nh = Object.entries(props.villager.nh_details).filter((e) => {
+      let nh = Object.entries(currentVillager.value.nh_details).filter((e) => {
         return availableNHDetailList.includes(e[0]);
       });
 
-      return basic.concat(nh);
+      return [...basic, ...nh];
     });
 
     const detailLabel = (label: string) => {
@@ -143,14 +140,29 @@ export default defineComponent({
       return detail;
     };
 
+    const closeInfo = () => {
+      router.go(-1);
+    };
+
+    onMounted(() => {
+      document.querySelector("html")!.classList.add("menuOpen");
+      getVillagerById(route?.params.id.toString());
+    });
+
+    onUnmounted(() => {
+      currentVillager.value = null;
+      document.querySelector("html")!.classList.remove("menuOpen");
+    });
+
     return {
-      props,
+      currentVillager,
       villagerName,
       availableDetails,
       canUseShareApi,
       share,
       detailLabel,
       parseDetail,
+      closeInfo,
     };
   },
 });

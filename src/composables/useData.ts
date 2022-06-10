@@ -42,7 +42,7 @@ export default function useData() {
       (v) => v.id === id
     ) as Villager;
 
-    currentVillager.value = villager;
+    setVillager(villager);
   };
 
   const getVillagers = (filters = "") => {
